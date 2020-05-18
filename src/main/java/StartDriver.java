@@ -7,6 +7,9 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 /**
  * This here is the class that starts everything (The Driver class).
+ * 1st argument: the fully qualified path to the stop words file;
+ * 2nd argument: the input fully qualified path;
+ * 3rd argument: the fully qualified path to the output;
  */
 public class StartDriver {
 
