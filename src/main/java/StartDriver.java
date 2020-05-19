@@ -37,7 +37,7 @@ public class StartDriver {
         job.setReducerClass(InversedIndexReducer.class);
 
         job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(ArrayWritable.class);
+        job.setOutputValueClass(Text.class);
 
         // add the stop-words file to be localize:
         job.addCacheFile(new Path(stopWordsFilePath).toUri());
