@@ -1,9 +1,15 @@
+import mapper.InversedIndexMapper;
+import mapper.InversedIndexRecord;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.ArrayWritable;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import reducer.DefaultReducer;
+import reducer.InversedIndexReducer;
 
 /**
  * This here is the class that starts everything (The Driver class).
@@ -15,13 +21,23 @@ public class StartDriver {
 
     public static void main(String[] args) throws Exception {
 
-        String stopWordsFilePath = args[0];
-        String inputFilePath = args[1];
-        String outputFilePath = args[2];
+        //TODO: read the stopWordsFilePath as an argument;
+        String stopWordsFilePath = "/inverted_index_stopwords.txt";
+        String inputFilePath = args[0];
+        String outputFilePath = args[1];
 
         // configure the Job:
         Job job = Job.getInstance(new Configuration(), "inversed index");
         job.setJarByClass(StartDriver.class);
+
+        job.setMapperClass(InversedIndexMapper.class);
+        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(InversedIndexRecord.class);
+
+        job.setReducerClass(InversedIndexReducer.class);
+
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(ArrayWritable.class);
 
         // add the stop-words file to be localize:
         job.addCacheFile(new Path(stopWordsFilePath).toUri());
@@ -29,7 +45,7 @@ public class StartDriver {
         FileInputFormat.addInputPath(job, new Path(inputFilePath));
         FileOutputFormat.setOutputPath(job, new Path(outputFilePath));
         // Submit the job to the cluster:
-        job.waitForCompletion(true);
+        System.exit(job.waitForCompletion(true) ? 0 : 1);
     }
 
 }

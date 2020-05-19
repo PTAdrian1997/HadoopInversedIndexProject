@@ -1,26 +1,48 @@
 package mapper;
 
-public class InversedIndexRecord {
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.Writable;
 
-    private String filename = null;
-    private Long lineNumber = null;
-    private Long wordNumber = null;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 
-    public InversedIndexRecord(String filename, Long lineNumber, Long wordNumber){
+public class InversedIndexRecord implements Writable {
+
+    private Text filename;
+    private LongWritable lineNumber;
+    private LongWritable wordNumber;
+
+    public InversedIndexRecord(){
+        this.filename = new Text();
+        this.lineNumber = new LongWritable();
+        this.wordNumber = new LongWritable();
+    }
+
+    public InversedIndexRecord(Text filename, LongWritable lineNumber, LongWritable wordNumber) {
         this.filename = filename;
         this.lineNumber = lineNumber;
         this.wordNumber = wordNumber;
     }
 
-    public String getFilename(){
-        return this.filename;
+    @Override
+    public String toString() {
+        return "InversedIndexRecord[filename=" + this.filename +
+                ", line_number=" + this.lineNumber +
+                ", word_number=" + this.wordNumber + "]";
     }
 
-    public Long getLineNumber() {
-        return this.lineNumber;
+    public void write(DataOutput dataOutput) throws IOException {
+        this.filename.write(dataOutput);
+        this.lineNumber.write(dataOutput);
+        this.wordNumber.write(dataOutput);
     }
 
-    public Long getWordNumber(){
-        return this.wordNumber;
+    public void readFields(DataInput dataInput) throws IOException {
+        this.filename.readFields(dataInput);
+        this.lineNumber.readFields(dataInput);
+        this.wordNumber.readFields(dataInput);
     }
+
 }
