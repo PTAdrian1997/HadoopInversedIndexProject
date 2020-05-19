@@ -14,12 +14,19 @@ public class InversedIndexRecord implements Writable {
     private LongWritable lineNumber;
     private LongWritable wordNumber;
 
+    public InversedIndexRecord(){
+        this.filename = new Text();
+        this.lineNumber = new LongWritable();
+        this.wordNumber = new LongWritable();
+    }
+
     public InversedIndexRecord(Text filename, LongWritable lineNumber, LongWritable wordNumber) {
         this.filename = filename;
         this.lineNumber = lineNumber;
         this.wordNumber = wordNumber;
     }
 
+    @Override
     public String toString() {
         return "InversedIndexRecord[filename=" + this.filename +
                 ", line_number=" + this.lineNumber +

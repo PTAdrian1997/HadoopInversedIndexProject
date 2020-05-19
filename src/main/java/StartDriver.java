@@ -2,12 +2,14 @@ import mapper.InversedIndexMapper;
 import mapper.InversedIndexRecord;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.ArrayWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import reducer.DefaultReducer;
+import reducer.InversedIndexReducer;
 
 /**
  * This here is the class that starts everything (The Driver class).
@@ -29,10 +31,13 @@ public class StartDriver {
         job.setJarByClass(StartDriver.class);
 
         job.setMapperClass(InversedIndexMapper.class);
-//        job.setReducerClass(DefaultReducer.class);
+        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(InversedIndexRecord.class);
+
+        job.setReducerClass(InversedIndexReducer.class);
 
         job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(Text.class);
+        job.setOutputValueClass(ArrayWritable.class);
 
         // add the stop-words file to be localize:
         job.addCacheFile(new Path(stopWordsFilePath).toUri());
