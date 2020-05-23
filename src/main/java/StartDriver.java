@@ -31,6 +31,7 @@ public class StartDriver {
         job.setJarByClass(StartDriver.class);
 
         job.setMapperClass(InversedIndexMapper.class);
+        job.setMaxMapAttempts(1);
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(Text.class);
 
