@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
+//TODO: use the InversedIndexRecord for the output value type;
 public class InversedIndexMapper
         extends Mapper<Object, Text, Text, Text> {
 
