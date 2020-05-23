@@ -1,7 +1,5 @@
 package reducer;
 
-import mapper.InversedIndexRecord;
-import org.apache.hadoop.io.ArrayWritable;
 import org.apache.hadoop.io.Text;
 
 import java.io.IOException;

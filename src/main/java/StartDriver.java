@@ -1,13 +1,13 @@
 import mapper.InversedIndexMapper;
-import mapper.InversedIndexRecord;
+import mapper.LineNumberMapper;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.ArrayWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import records.LineNumberRecord;
 import reducer.DefaultReducer;
 import reducer.InversedIndexReducer;
 
@@ -30,12 +30,14 @@ public class StartDriver {
         Job job = Job.getInstance(new Configuration(), "inversed index");
         job.setJarByClass(StartDriver.class);
 
-        job.setMapperClass(InversedIndexMapper.class);
+        //TODO: explore the ChainMapper
+
+        job.setMapperClass(LineNumberMapper.class);
         job.setMaxMapAttempts(1);
         job.setMapOutputKeyClass(Text.class);
-        job.setMapOutputValueClass(Text.class);
+        job.setMapOutputValueClass(LineNumberRecord.class);
 
-        job.setReducerClass(InversedIndexReducer.class);
+        job.setReducerClass(DefaultReducer.class);
 
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);

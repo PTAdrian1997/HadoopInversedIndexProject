@@ -1,32 +1,26 @@
 package reducer;
 
-import mapper.InversedIndexRecord;
-import org.apache.hadoop.io.ArrayWritable;
-import org.apache.hadoop.io.IntWritable;
+import records.InversedIndexRecord;
 import org.apache.hadoop.mapred.*;
 import org.apache.hadoop.io.Text;
+import records.LineNumberRecord;
 
 import java.io.IOException;
-import java.util.Iterator;
-import org.apache.hadoop.mapred.Reducer;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class simply writes what receives from the mapper;
  */
 public class DefaultReducer
-    extends org.apache.hadoop.mapreduce.Reducer<Text, InversedIndexRecord, Text, Text> {
-    private Text recordText = new Text();
-    public void reduce(Text text, Iterable<InversedIndexRecord> values,
+    extends org.apache.hadoop.mapreduce.Reducer<Text, LineNumberRecord, Text, Text> {
+
+    public void reduce(Text text, Iterable<LineNumberRecord> values,
                        Context context) throws IOException, InterruptedException {
-        for(InversedIndexRecord currentRecord: values){
-            recordText.set(currentRecord.toString());
-            context.write(text, recordText);
+        List<String> recordList = new ArrayList<String>();
+        for(LineNumberRecord currentRecord: values){
+            recordList.add(currentRecord.toString());
         }
-    }
-
-    public void close() throws IOException {
-    }
-
-    public void configure(JobConf jobConf) {
+        context.write(text, new Text(recordList.toString()));
     }
 }

@@ -17,7 +17,8 @@ public class InversedIndexMapper
     private File stopwordsFile;
     private Text word = new Text();
 
-    public void map(LongWritable offset, Text text, Context context) throws IOException, InterruptedException {
+    public void map(LongWritable offset, Text text, Context context)
+            throws IOException, InterruptedException {
         // get the inputFilename:
         String inputFileName = ((FileSplit)context.getInputSplit()).getPath().getName();
         // get the line number:
