@@ -32,7 +32,7 @@ public class StartDriver {
 
         job.setMapperClass(InversedIndexMapper.class);
         job.setMapOutputKeyClass(Text.class);
-        job.setMapOutputValueClass(InversedIndexRecord.class);
+        job.setMapOutputValueClass(Text.class);
 
         job.setReducerClass(InversedIndexReducer.class);
 

@@ -9,14 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InversedIndexReducer
-        extends org.apache.hadoop.mapreduce.Reducer<Text, InversedIndexRecord, Text, Text> {
+        extends org.apache.hadoop.mapreduce.Reducer<Text, Text, Text, Text> {
 
     private Text recordListText = new Text();
-    public void reduce(Text key, Iterable<InversedIndexRecord> values, Context context)
+    public void reduce(Text key, Iterable<Text> values, Context context)
             throws IOException, InterruptedException {
-        List<InversedIndexRecord> recordList = new ArrayList<InversedIndexRecord>();
-        for (InversedIndexRecord currentRecord : values) {
-            recordList.add(currentRecord);
+        List<String> recordList = new ArrayList<String>();
+        for (Text currentRecord : values) {
+            recordList.add(currentRecord.toString());
         }
         recordListText.set(recordList.toString());
         context.write(key, recordListText);
