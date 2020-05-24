@@ -10,6 +10,7 @@ public class InversedIndexReducer
         extends org.apache.hadoop.mapreduce.Reducer<Text, Text, Text, Text> {
 
     private Text recordListText = new Text();
+    @Override
     public void reduce(Text key, Iterable<Text> values, Context context)
             throws IOException, InterruptedException {
         List<String> recordList = new ArrayList<String>();

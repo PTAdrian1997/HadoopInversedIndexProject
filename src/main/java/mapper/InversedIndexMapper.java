@@ -12,7 +12,7 @@ import java.util.StringTokenizer;
 
 //TODO: use the InversedIndexRecord for the output value type;
 public class InversedIndexMapper
-        extends Mapper<LongWritable, Text, Text, Text> {
+        extends Mapper<Text, Text, Text, Text> {
 
     private File stopwordsFile;
     private Text word = new Text();
