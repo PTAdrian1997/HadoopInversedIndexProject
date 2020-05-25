@@ -1,5 +1,7 @@
 package reducer;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.apache.hadoop.io.Text;
 
 import records.LineNumberRecord;
@@ -24,6 +26,10 @@ public class OffsetReducer
         List<Integer> visitedIndexes = new ArrayList<>();
         long currentLineNumber = 0;
         long currentOffset = 0;
+
+        // setup the Gson builder:
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.create();
         for (OffsetRecord value : values) {
             //NOTA BENE: You need to create a new object by using the constructor;
             // if you don't do that, all the objects in the list will be the same;
@@ -46,11 +52,12 @@ public class OffsetReducer
             context.write(
                     new Text(currentLineString),
                     new Text(
-                            (new LineNumberRecord(
+                            gson.toJson(
+                                    new LineNumberRecord(
                                     filenameText.toString(),
                                     currentLineNumber,
                                     currentLineString
-                            )).toString()
+                            ))
                     )
             );
         }
