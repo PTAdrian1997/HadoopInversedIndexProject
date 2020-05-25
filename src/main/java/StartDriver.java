@@ -102,13 +102,15 @@ public class StartDriver extends Configured implements Tool {
         job2.setJarByClass(InversedIndexMapper.class);
 
         job2.setMapperClass(InversedIndexMapper.class);
+        job2.setMaxMapAttempts(1);
         job2.setMapOutputKeyClass(Text.class);
-        job2.setMapOutputValueClass(Text.class);
+        job2.setMapOutputValueClass(InversedIndexRecord.class);
 
+        job2.setReducerClass(InversedIndexReducer.class);
+        job2.setMaxReduceAttempts(1);
         job2.setOutputKeyClass(Text.class);
-        job2.setMapOutputValueClass(Text.class);
+        job2.setOutputValueClass(Text.class);
 
-//        job2.setReducerClass(InversedIndexReducer.class);
         FileOutputFormat.setOutputPath(job2, new Path(outputFilePath + processedString));
         FileInputFormat.setInputPaths(job2, new Path(outputFilePath + tempString + "/part*"));
         ControlledJob controlledJob2 = new ControlledJob(conf2);

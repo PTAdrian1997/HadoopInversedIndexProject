@@ -17,7 +17,7 @@ import java.util.StringTokenizer;
 
 //TODO: use the InversedIndexRecord for the output value type;
 public class InversedIndexMapper
-        extends Mapper<Object, Text, Text, Text> {
+        extends Mapper<Object, Text, Text, InversedIndexRecord> {
 
     private File stopwordsFile;
     private final Text word = new Text();
@@ -41,13 +41,11 @@ public class InversedIndexMapper
             wordNumber++;
             word.set(currentWord);
             context.write(word,
-                    new Text(
-                            gson.toJson(new InversedIndexRecord(
-                                    lineNumberRecord.getFilename(),
-                                    lineNumberRecord.getLineNumber(),
-                                    wordNumber
-                            ))
-                    ));
+                    new InversedIndexRecord(
+                            lineNumberRecord.getFilename(),
+                            lineNumberRecord.getLineNumber(),
+                            wordNumber)
+            );
         }
     }
 

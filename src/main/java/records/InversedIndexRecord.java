@@ -16,6 +16,12 @@ public class InversedIndexRecord implements Writable {
 
     public InversedIndexRecord(){ }
 
+    public InversedIndexRecord(InversedIndexRecord other){
+        this.filename = other.filename;
+        this.wordNumber = other.wordNumber;
+        this.lineNumber = other.lineNumber;
+    }
+
     public InversedIndexRecord(String filename, long lineNumber, long wordNumber) {
         this.filename = filename;
         this.lineNumber = lineNumber;
@@ -41,6 +47,18 @@ public class InversedIndexRecord implements Writable {
         this.filename = dataInput.readUTF();
         this.lineNumber = dataInput.readLong();
         this.wordNumber = dataInput.readLong();
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public long getLineNumber() {
+        return lineNumber;
+    }
+
+    public long getWordNumber() {
+        return wordNumber;
     }
 
 }

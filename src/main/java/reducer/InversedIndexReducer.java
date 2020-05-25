@@ -17,7 +17,7 @@ public class InversedIndexReducer
             throws IOException, InterruptedException {
         List<String> recordList = new ArrayList<String>();
         for (InversedIndexRecord currentRecord : values) {
-            recordList.add(currentRecord.toString());
+            recordList.add((new InversedIndexRecord(currentRecord)).toString());
         }
         recordListText.set(recordList.toString());
         context.write(key, recordListText);
