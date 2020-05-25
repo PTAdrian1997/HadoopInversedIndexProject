@@ -10,17 +10,13 @@ import java.io.IOException;
 
 public class InversedIndexRecord implements Writable {
 
-    private Text filename;
-    private LongWritable lineNumber;
-    private LongWritable wordNumber;
+    private String filename;
+    private long lineNumber;
+    private long wordNumber;
 
-    public InversedIndexRecord(){
-        this.filename = new Text();
-        this.lineNumber = new LongWritable();
-        this.wordNumber = new LongWritable();
-    }
+    public InversedIndexRecord(){ }
 
-    public InversedIndexRecord(Text filename, LongWritable lineNumber, LongWritable wordNumber) {
+    public InversedIndexRecord(String filename, long lineNumber, long wordNumber) {
         this.filename = filename;
         this.lineNumber = lineNumber;
         this.wordNumber = wordNumber;
@@ -33,16 +29,18 @@ public class InversedIndexRecord implements Writable {
                 ", word_number=" + this.wordNumber + "]";
     }
 
+    @Override
     public void write(DataOutput dataOutput) throws IOException {
-        this.filename.write(dataOutput);
-        this.lineNumber.write(dataOutput);
-        this.wordNumber.write(dataOutput);
+        dataOutput.writeUTF(this.filename);
+        dataOutput.writeLong(this.lineNumber);
+        dataOutput.writeLong(this.wordNumber);
     }
 
+    @Override
     public void readFields(DataInput dataInput) throws IOException {
-        this.filename.readFields(dataInput);
-        this.lineNumber.readFields(dataInput);
-        this.wordNumber.readFields(dataInput);
+        this.filename = dataInput.readUTF();
+        this.lineNumber = dataInput.readLong();
+        this.wordNumber = dataInput.readLong();
     }
 
 }

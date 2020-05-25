@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -24,6 +25,7 @@ public class OffsetReducer
             throws IOException, InterruptedException {
         List<OffsetRecord> originalRecordList = new ArrayList<>();
         List<Integer> visitedIndexes = new ArrayList<>();
+
         long currentLineNumber = 0;
         long currentOffset = 0;
 
@@ -35,7 +37,7 @@ public class OffsetReducer
             // if you don't do that, all the objects in the list will be the same;
             originalRecordList.add(new OffsetRecord(value));
         }
-        while(visitedIndexes.size() != originalRecordList.size()){
+        while (visitedIndexes.size() != originalRecordList.size()) {
             // search for the element that has the current offset:
             int currentRecordIndex = -1;
             for (int i = 0; i < originalRecordList.size() && currentRecordIndex == -1; i++) {
@@ -50,14 +52,14 @@ public class OffsetReducer
             // add the number of chars in the current line + 1 to the current offset:
             currentOffset += currentLineString.length() + 1;
             context.write(
-                    new Text(currentLineString),
+                    new Text(),
                     new Text(
                             gson.toJson(
                                     new LineNumberRecord(
-                                    filenameText.toString(),
-                                    currentLineNumber,
-                                    currentLineString
-                            ))
+                                            filenameText.toString(),
+                                            currentLineNumber,
+                                            currentLineString
+                                    ))
                     )
             );
         }

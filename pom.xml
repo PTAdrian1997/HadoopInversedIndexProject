@@ -65,7 +65,7 @@
             <artifactId>hadoop-mapreduce-client-hs-plugins</artifactId>
             <version>2.7.5</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-mapreduce-client-jobclient -->
+        <!-- https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-mapreduce-client-job1client -->
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-mapreduce-client-jobclient</artifactId>

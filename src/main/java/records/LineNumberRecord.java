@@ -7,38 +7,49 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 public class LineNumberRecord implements Writable {
+    public void setLineNumber(long lineNumber) {
+        this.lineNumber = lineNumber;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
+    public void setActualLineContent(String actualLineContent) {
+        this.actualLineContent = actualLineContent;
+    }
 
     private long lineNumber;
-    private String lineString;
     private String filename;
+    private String actualLineContent;
 
     public LineNumberRecord(){}
 
-    public LineNumberRecord(String filename, long lineNumber, String lineString){
-        this.lineString = lineString;
+    public LineNumberRecord(String filename, long lineNumber, String actualLineContent){
         this.lineNumber = lineNumber;
         this.filename = filename;
+        this.actualLineContent = actualLineContent;
     }
 
     @Override
     public void write(DataOutput dataOutput) throws IOException {
         dataOutput.writeUTF(this.filename);
         dataOutput.writeLong(this.lineNumber);
-        dataOutput.writeUTF(this.lineString);
+        dataOutput.writeUTF(this.actualLineContent);
     }
 
     @Override
     public void readFields(DataInput dataInput) throws IOException {
         this.filename = dataInput.readUTF();
         this.lineNumber = dataInput.readLong();
-        this.lineString = dataInput.readUTF();
+        this.actualLineContent = dataInput.readUTF();
     }
 
     @Override
     public String toString(){
-        return "LineNumberRecord[lineString='" + this.lineString +
-                "', lineNumber=" + this.lineNumber +
+        return "LineNumberRecord[lineNumber=" + this.lineNumber +
                 ", filename=" + this.filename +
+                ", actualLineContent=" + this.actualLineContent +
                 "]";
     }
 
@@ -46,11 +57,11 @@ public class LineNumberRecord implements Writable {
         return lineNumber;
     }
 
-    public String getLineString() {
-        return lineString;
-    }
-
     public String getFilename() {
         return filename;
+    }
+
+    public String getActualLineContent() {
+        return this.actualLineContent;
     }
 }
