@@ -28,7 +28,7 @@ public class InversedIndexMapper
     private List<String> readStopWords(){
         List<String> stopWords = new ArrayList<>();
         try{
-            File stopwordsFile = new File("/inverted_index_stopwords.txt");
+            File stopwordsFile = new File("inverted_index_stopwords.txt");
             // read the stopwords line by line:
             BufferedReader br = new BufferedReader(new FileReader(stopwordsFile));
             String line;
@@ -47,10 +47,10 @@ public class InversedIndexMapper
             throws IOException, InterruptedException {
         // read the list of stopwords:
         List<String> stopwordsList = readStopWords();
+        System.out.println(stopwordsList.toString());
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(LineNumberRecord.class, new LineNumberRecordAdapter());
         Gson gson = gsonBuilder.create();
-        System.out.println(lineNumberRecordText.toString().trim());
         LineNumberRecord lineNumberRecord = gson
                 .fromJson(lineNumberRecordText.toString().trim(), LineNumberRecord.class);
         // split the words:
@@ -61,14 +61,16 @@ public class InversedIndexMapper
         while (stringTokenizer.hasMoreElements()) {
             String currentWord = stringTokenizer.nextToken();
             // check if the word is in the stopwords list:
-            wordNumber++;
-            word.set(currentWord);
-            context.write(word,
-                    new InversedIndexRecord(
-                            lineNumberRecord.getFilename(),
-                            lineNumberRecord.getLineNumber(),
-                            wordNumber)
-            );
+            if(!stopwordsList.contains(currentWord)){
+                wordNumber++;
+                word.set(currentWord);
+                context.write(word,
+                        new InversedIndexRecord(
+                                lineNumberRecord.getFilename(),
+                                lineNumberRecord.getLineNumber(),
+                                wordNumber)
+                );
+            }
         }
     }
 

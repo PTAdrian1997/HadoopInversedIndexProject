@@ -41,7 +41,6 @@ public class OffsetReducer
             // search for the element that has the current offset:
             int currentRecordIndex = -1;
             for (int i = 0; i < originalRecordList.size() && currentRecordIndex == -1; i++) {
-                System.out.println(originalRecordList.get(i).toString());
                 if (!visitedIndexes.contains(i) &&
                         originalRecordList.get(i).getOffset() == currentOffset)
                     currentRecordIndex = i;
