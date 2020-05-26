@@ -12,6 +12,7 @@ import org.apache.hadoop.mapred.TextOutputFormat;
 import org.apache.hadoop.mapreduce.Job;
 
 
+import org.apache.hadoop.mapreduce.filecache.ClientDistributedCacheManager;
 import org.apache.hadoop.mapreduce.lib.chain.Chain;
 import org.apache.hadoop.mapreduce.lib.chain.ChainMapper;
 import org.apache.hadoop.mapreduce.lib.chain.ChainReducer;
@@ -28,6 +29,8 @@ import reducer.DefaultReducer;
 import reducer.InversedIndexReducer;
 import reducer.OffsetReducer;
 
+import java.net.URI;
+
 /**
  * This here is the class that starts everything (The Driver class).
  * 1st argument: the fully qualified path to the stop words file;
@@ -38,6 +41,7 @@ public class StartDriver extends Configured implements Tool {
 
     public static final String processedString = "/processed";
     public static final String tempString = "/temp";
+    public static final String stopWordsFilePath = "/inverted_index_stopwords.txt";
 
     public static void main(String[] args) throws Exception {
         int exitCode = ToolRunner.run(new StartDriver(), args);
@@ -49,8 +53,6 @@ public class StartDriver extends Configured implements Tool {
 
         JobControl jobControl = new JobControl("JobChain");
 
-        //TODO: read the stopWordsFilePath as an argument;
-        String stopWordsFilePath = "/inverted_index_stopwords.txt";
         String inputFilePath = args[0];
         String outputFilePath = args[1];
 
@@ -66,26 +68,9 @@ public class StartDriver extends Configured implements Tool {
         job1.setMapperClass(OffsetMapper.class);
         job1.setMapOutputKeyClass(Text.class);
         job1.setMapOutputValueClass(OffsetRecord.class);
-//        ChainMapper.addMapper(
-//                job1,
-//                OffsetMapper.class,
-//                LongWritable.class,
-//                Text.class,
-//                Text.class,
-//                OffsetRecord.class,
-//                new JobConf(false)
-//        );
+
         job1.setMaxMapAttempts(1);
 
-//        ChainReducer.setReducer(
-//                job1,
-//                OffsetReducer.class,
-//                Text.class,
-//                OffsetRecord.class,
-//                Text.class,
-//                LineNumberRecord.class,
-//                new JobConf(false)
-//        );
         job1.setReducerClass(OffsetReducer.class);
         job1.setMaxReduceAttempts(1);
 
@@ -100,6 +85,7 @@ public class StartDriver extends Configured implements Tool {
         Configuration conf2 = getConf();
         Job job2 = Job.getInstance(conf2, "WordJob");
         job2.setJarByClass(InversedIndexMapper.class);
+        job2.addCacheFile(new URI(stopWordsFilePath));
 
         job2.setMapperClass(InversedIndexMapper.class);
         job2.setMaxMapAttempts(1);
