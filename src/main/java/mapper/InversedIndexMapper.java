@@ -67,8 +67,7 @@ public class InversedIndexMapper
                 context.write(word,
                         new InversedIndexRecord(
                                 lineNumberRecord.getFilename(),
-                                lineNumberRecord.getLineNumber(),
-                                wordNumber)
+                                lineNumberRecord.getLineNumber())
                 );
             }
         }
