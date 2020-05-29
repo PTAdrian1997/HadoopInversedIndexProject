@@ -3,6 +3,7 @@ package mapper;
 import adapters.LineNumberRecordAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import opennlp.tools.stemmer.PorterStemmer;
 import org.apache.hadoop.io.ArrayWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -54,21 +55,25 @@ public class InversedIndexMapper
         LineNumberRecord lineNumberRecord = gson
                 .fromJson(lineNumberRecordText.toString().trim(), LineNumberRecord.class);
         // split the words:
-        String separators = "\"\',.()?![]#$*+-;:_/\\<>@%& ";
-        StringTokenizer stringTokenizer = new StringTokenizer(
-                lineNumberRecord.getActualLineContent(), separators);
+//        String separators = "\"\',.()?![]#$*+-;:_/\\<>@%& ";
+//        StringTokenizer stringTokenizer = new StringTokenizer(
+//                lineNumberRecord.getActualLineContent(), separators);
+        String[] words = lineNumberRecord.getActualLineContent()
+                .replaceAll("^[a-zA-Z0-9 ]", " ")
+                .split(" ");
         long wordNumber = 0L;
-        while (stringTokenizer.hasMoreElements()) {
-            String currentWord = stringTokenizer.nextToken();
-            // check if the word is in the stopwords list:
+        for(int wordIndex = 0; wordIndex < words.length; wordIndex++) {
+            String currentWord = words[wordIndex];
+            // get the root of the word:
+//            String wordRoot = new PorterStemmer().stem(currentWord.trim());
             if(!stopwordsList.contains(currentWord)){
+                // check if the word is in the stopwords list:
                 wordNumber++;
                 word.set(currentWord);
                 context.write(word,
                         new InversedIndexRecord(
                                 lineNumberRecord.getFilename(),
-                                lineNumberRecord.getLineNumber(),
-                                wordNumber)
+                                lineNumberRecord.getLineNumber())
                 );
             }
         }

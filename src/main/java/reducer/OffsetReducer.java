@@ -37,19 +37,11 @@ public class OffsetReducer
             // if you don't do that, all the objects in the list will be the same;
             originalRecordList.add(new OffsetRecord(value));
         }
-        while (visitedIndexes.size() != originalRecordList.size()) {
-            // search for the element that has the current offset:
-            int currentRecordIndex = -1;
-            for (int i = 0; i < originalRecordList.size() && currentRecordIndex == -1; i++) {
-                if (!visitedIndexes.contains(i) &&
-                        originalRecordList.get(i).getOffset() == currentOffset)
-                    currentRecordIndex = i;
-            }
+        List<OffsetRecord> sortedRecordsList = originalRecordList.stream()
+                .sorted((x, y) -> (int) (x.getOffset() - y.getOffset()))
+                .collect(Collectors.toList());
+        for (OffsetRecord currentRecord : sortedRecordsList) {
             currentLineNumber++;
-            String currentLineString = originalRecordList.get(currentRecordIndex).getLineString();
-            visitedIndexes.add(currentRecordIndex);
-            // add the number of chars in the current line + 1 to the current offset:
-            currentOffset += currentLineString.length() + 1;
             context.write(
                     new Text(),
                     new Text(
@@ -57,7 +49,7 @@ public class OffsetReducer
                                     new LineNumberRecord(
                                             filenameText.toString(),
                                             currentLineNumber,
-                                            currentLineString
+                                            currentRecord.getLineString()
                                     ))
                     )
             );
